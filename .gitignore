@@ -1,0 +1,160 @@
+# Binários
+bin/
+obj/
+
+# Arquivos de build do Visual Studio
+.vs/
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.sdf
+*.pdb
+*.idb
+*.opendb
+*.VC.db
+*.VC.opendb
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Arquivos temporários
+*.log
+*.json
+
+# Logs e arquivos de diagnóstico
+*.log
+*.config
+*.htm
+*.html
+*.manifest
+*.xml
+*.xaml
+*.txt
+*.md
+*.csv
+*.sql
+*.ps1
+*.psm1
+*.psd1
+*.pssc
+*.pssproj
+*.pubxml
+*.publishsettings
+*.settings
+*.setx
+*.sln.docstates
+*.user
+*.userosscache
+*.suo
+*.suo.*
+*.sw?
+*.swp
+*.tmp
+*.tmp.*
+*.swp
+[Tt]est[Ss]tack[Tt]race
+*.[Pp]ublish.xml
+*.[Pp]db
+*.[Cc]ache
+*.ilk
+*.cl
+*.sbr
+*.scc
+*.tlh
+*.tli
+*.tlb
+*.log
+*.nvgrp
+*.svclog
+*.mdf
+*.ldf
+*.userprefs
+*.csproj.user
+*.[Cc]ache
+*.sqlite
+*.sqlite3
+*.db
+*.db3
+
+# Visual Studio Code
+.vscode/
+
+# Pasta de packages do NuGet
+## Caso esteja usando o Visual Studio, comente a linha abaixo
+# packages/
+
+# Nunit
+*.VisualState.xml
+TestResult.xml
+
+# Resharper
+_ReSharper*/
+*.resharper
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# NCrunch
+*.ncrunch*
+.*crunch*.local.xml
+
+# Crachás do C#
+[Bb]uild[Ll]og.*
+bin/
+[Oo]bj/
+
+# Rider
+.idea/
+
+# Arquivos de tipo de arquivo
+*.tgz
+*.zip
+*.exe
+*.dll
+*.log
+*.dll.config
+
+# OpenCover
+OpenCover/
+Reports/
+
+# Entity Framework
+*.edmx
+*.edmx.diagram
+Model*.tt
+GenerateEntityModel
+
+# Arquivos de saída MSBuild
+*.Cache
+*.Cache.db
+*.pdb
+*.mdb
+*.mdb.db
+*.pgm.db
+*.pgm
+*.gpState
+*.gpState.db
+*.gpState.*
+*.gpState.*.db
+*.nupkg
+*.nupkg.db
+*.temp
+
+# Arquivos do Windows
+Thumbs.db
+ehthumbs.db
+
+# Arquivos de compilação
+node_modules/
+webpack.config.js
