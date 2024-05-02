@@ -28,7 +28,7 @@ Para obter um token de autenticação, os usuários devem fazer login com suas c
 
 ## Requisitos
 
-- .NET Core 3.1 ou superior
+- .NET
 - MySQL Server
 - Docker
 
