@@ -30,7 +30,7 @@ namespace UserMicroservice
             services.AddControllers();
 
             services.AddDbContext<AppDbContext>(options =>
-                options.UseInMemoryDatabase("InMemoryDatabase"));
+                options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<UserService>();
 

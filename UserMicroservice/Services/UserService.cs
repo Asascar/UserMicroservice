@@ -48,6 +48,7 @@ namespace UserMicroservice.Services
             {
                 existingUser.Username = user.Username;
                 existingUser.Password = user.Password;
+                existingUser.Email = user.Email;
                 _context.SaveChanges();
             }
         }

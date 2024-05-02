@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using UserMicroservice.Models;
 using UserMicroservice.Repositories;
 using UserMicroservice.Services;
+using Xunit;
 
 namespace UserMicroservice.Tests
 {
@@ -21,6 +23,10 @@ namespace UserMicroservice.Tests
                 .Build();
 
             _service = new UserService(_dbContext, _configuration);
+
+            // Limpar o banco de dados antes de cada teste
+            _dbContext.Users.RemoveRange(_dbContext.Users);
+            _dbContext.SaveChanges();
         }
 
         [Fact]
@@ -28,14 +34,13 @@ namespace UserMicroservice.Tests
         {
             // Arrange
             var users = GetTestUsers();
-            _dbContext.Users.AddRange(users);
-            _dbContext.SaveChanges();
+            AddUsersToDatabase(users);
 
             // Act
             var result = _service.GetAllUsers();
 
             // Assert
-            Assert.Equal(users, result);
+            Assert.Equal(users, result.OrderBy(x => x.Id));
         }
 
         [Fact]
@@ -43,8 +48,7 @@ namespace UserMicroservice.Tests
         {
             // Arrange
             var users = GetTestUsers();
-            _dbContext.Users.AddRange(users);
-            _dbContext.SaveChanges();
+            AddUsersToDatabase(users);
             var userId = 1;
 
             // Act
@@ -52,7 +56,7 @@ namespace UserMicroservice.Tests
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(users.First(u => u.Id == userId), result);
+            Assert.Equal(users.Find(u => u.Id == userId), result);
         }
 
         [Fact]
@@ -212,7 +216,7 @@ namespace UserMicroservice.Tests
             // Arrange
             var username = "test_user";
             var password = "test_password";
-            var testUser = new User { Username = username, Password = password , Email = "teste@teste.com.br" };
+            var testUser = new User { Username = username, Password = password, Email = "teste@teste.com.br" };
             _dbContext.Users.Add(testUser);
             _dbContext.SaveChanges();
 
@@ -223,7 +227,7 @@ namespace UserMicroservice.Tests
             Assert.Null(result);
         }
 
-        private IEnumerable<User> GetTestUsers()
+        private List<User> GetTestUsers()
         {
             return new List<User>
             {
@@ -231,6 +235,12 @@ namespace UserMicroservice.Tests
                 new User { Id = 2, Username = "User2", Password = "Password2", Email = "teste@teste.com.br"  },
                 new User { Id = 3, Username = "User3", Password = "Password3", Email = "teste@teste.com.br"  }
             };
+        }
+
+        private void AddUsersToDatabase(List<User> users)
+        {
+            _dbContext.Users.AddRange(users);
+            _dbContext.SaveChanges();
         }
     }
 }

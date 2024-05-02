@@ -27,6 +27,10 @@ namespace UserMicroservice.Tests
 
             _userService = new UserService(_dbContext, _configuration);
             _controller = new UserController(_userService);
+
+            // Limpar o banco de dados antes de cada teste
+            _dbContext.Users.RemoveRange(_dbContext.Users);
+            _dbContext.SaveChanges();
         }
 
         [Fact]
@@ -34,8 +38,7 @@ namespace UserMicroservice.Tests
         {
             // Arrange
             var users = GetTestUsers();
-            _dbContext.Users.AddRange(users);
-            _dbContext.SaveChanges();
+            AddUsersToDatabase(users);
 
             // Act
             var result = _controller.Get() as OkObjectResult;
@@ -44,7 +47,7 @@ namespace UserMicroservice.Tests
             Assert.NotNull(result);
             var returnedUsers = result.Value as IEnumerable<User>;
             Assert.NotNull(returnedUsers);
-            Assert.Equal(users, returnedUsers);
+            Assert.Equal(users, returnedUsers.OrderBy(x => x.Id));
         }
 
         [Fact]
@@ -52,8 +55,7 @@ namespace UserMicroservice.Tests
         {
             // Arrange
             var users = GetTestUsers();
-            _dbContext.Users.AddRange(users);
-            _dbContext.SaveChanges();
+            AddUsersToDatabase(users);
             var userId = 1;
             _controller.ControllerContext = GetControllerContextWithUserId(userId);
 
@@ -64,7 +66,7 @@ namespace UserMicroservice.Tests
             Assert.NotNull(result);
             var user = result.Value as User;
             Assert.NotNull(user);
-            Assert.Equal(users.First(u => u.Id == userId), user);
+            Assert.Equal(users.Find(u => u.Id == userId), user);
         }
 
         [Fact]
@@ -72,8 +74,7 @@ namespace UserMicroservice.Tests
         {
             // Arrange
             var users = GetTestUsers();
-            _dbContext.Users.AddRange(users);
-            _dbContext.SaveChanges();
+            AddUsersToDatabase(users);
             var userId = 999;
             _controller.ControllerContext = GetControllerContextWithUserId(userId);
 
@@ -105,8 +106,7 @@ namespace UserMicroservice.Tests
         {
             // Arrange
             var users = GetTestUsers();
-            _dbContext.Users.AddRange(users);
-            _dbContext.SaveChanges();
+            AddUsersToDatabase(users);
             var userId = 1;
             _controller.ControllerContext = GetControllerContextWithUserId(userId);
             var updatedUser = new User { Id = userId, Username = "UpdatedUser", Password = "UpdatedPassword", Email = "teste@teste.com.br" };
@@ -124,8 +124,7 @@ namespace UserMicroservice.Tests
         {
             // Arrange
             var users = GetTestUsers();
-            _dbContext.Users.AddRange(users);
-            _dbContext.SaveChanges();
+            AddUsersToDatabase(users);
             var userId = 999;
             _controller.ControllerContext = GetControllerContextWithUserId(userId);
             var updatedUser = new User { Id = userId, Username = "UpdatedUser", Password = "UpdatedPassword", Email = "teste@teste.com.br" };
@@ -142,8 +141,7 @@ namespace UserMicroservice.Tests
         {
             // Arrange
             var users = GetTestUsers();
-            _dbContext.Users.AddRange(users);
-            _dbContext.SaveChanges();
+            AddUsersToDatabase(users);
             var userId = 1;
             _controller.ControllerContext = GetControllerContextWithUserId(userId);
 
@@ -161,8 +159,7 @@ namespace UserMicroservice.Tests
         {
             // Arrange
             var users = GetTestUsers();
-            _dbContext.Users.AddRange(users);
-            _dbContext.SaveChanges();
+            AddUsersToDatabase(users);
             var userId = 999;
             _controller.ControllerContext = GetControllerContextWithUserId(userId);
 
@@ -174,7 +171,7 @@ namespace UserMicroservice.Tests
             Assert.IsType<NotFoundResult>(result);
         }
 
-        private IEnumerable<User> GetTestUsers()
+        private List<User> GetTestUsers()
         {
             return new List<User>
             {
@@ -182,6 +179,12 @@ namespace UserMicroservice.Tests
                 new User { Id = 2, Username = "User2", Password = "Password2", Email = "teste@teste.com.br"  },
                 new User { Id = 3, Username = "User3", Password = "Password3", Email = "teste@teste.com.br"  }
             };
+        }
+
+        private void AddUsersToDatabase(List<User> users)
+        {
+            _dbContext.Users.AddRange(users);
+            _dbContext.SaveChanges();
         }
 
         private ControllerContext GetControllerContextWithUserId(int userId)
