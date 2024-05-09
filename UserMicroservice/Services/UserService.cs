@@ -10,56 +10,53 @@ namespace UserMicroservice.Services
 {
     public class UserService
     {
-        private readonly AppDbContext _context;
+        private readonly UserRepository _userRepository;
         private readonly string _jwtSecret;
 
-        public UserService(AppDbContext context, IConfiguration configuration)
+        public UserService(UserRepository userRepository, IConfiguration configuration)
         {
-            _context = context;
+            _userRepository = userRepository;
             _jwtSecret = configuration["JwtSettings:Secret"];
         }
 
         public IEnumerable<User> GetAllUsers()
         {
-            return _context.Users.ToList();
+            return _userRepository.GetAllUsers();
         }
 
         public User GetUserById(int id)
         {
-            return _context.Users.FirstOrDefault(u => u.Id == id);
+            return _userRepository.GetUserById(id);
         }
 
         public User GetUserByEmail(string email)
         {
-            return _context.Users.FirstOrDefault(u => u.Email == email);
+            return _userRepository.GetUserByEmail(email);
         }
 
         public User CreateUser(User user)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
-            return user;
+            return _userRepository.CreateUser(user);
         }
 
         public void UpdateUser(int id, User user)
         {
-            var existingUser = _context.Users.FirstOrDefault(u => u.Id == id);
+            var existingUser = _userRepository.GetUserById(id);
             if (existingUser != null)
             {
                 existingUser.Username = user.Username;
                 existingUser.Password = user.Password;
                 existingUser.Email = user.Email;
-                _context.SaveChanges();
+                _userRepository.UpdateUser(id, user);
             }
         }
 
         public void DeleteUser(int id)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Id == id);
-            if (user != null)
+            var existingUser = _userRepository.GetUserById(id);
+            if (existingUser != null)
             {
-                _context.Users.Remove(user);
-                _context.SaveChanges();
+                _userRepository.DeleteUser(id);
             }
         }
 
@@ -90,7 +87,7 @@ namespace UserMicroservice.Services
 
         public User Authenticate(string username, string password)
         {
-            var user = _context.Users.SingleOrDefault(x => x.Username == username && x.Password == password);
+            var user = _userRepository.Authenticate(username, password);
 
             if (user == null)
                 return null;
